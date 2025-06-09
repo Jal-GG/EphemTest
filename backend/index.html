@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.IO Connection Test</title>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>Socket.IO Connection Test</h1>
+  <div id="output"></div>
+  <script>
+    const socket = io('ws://localhost:3000', {
+      auth: {
+        token: 'eyJraWQiOiJsbm1JYUQ5ajhcL2FuVlV1bjM4SHdOakRRXC9tVnFoK1wvS3laNHVranErTDhRPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJiMGZjMzkwYy0zMDcxLTcwN2ItMTliNC05M2IxZmE3N2VlMDQiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmV1LW5vcnRoLTEuYW1hem9uYXdzLmNvbVwvZXUtbm9ydGgtMV9DdWR6WHZBd28iLCJjb2duaXRvOnVzZXJuYW1lIjoiYjBmYzM5MGMtMzA3MS03MDdiLTE5YjQtOTNiMWZhNzdlZTA0Iiwib3JpZ2luX2p0aSI6ImNkM2MzM2M2LTg0ZWItNDliMS1iZGU3LTNjYTc1ZDJiZDQ3YSIsImF1ZCI6IjFnZnZ1ZGxrbXQ5ODZkcmdoZmg3NjBxbzBtIiwiZXZlbnRfaWQiOiIyNGI4ZWExYy1mZTEzLTQwNDgtOWE3NS0zNTlhMWIxOGE0MjYiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTc0OTIzMzI5OSwiZXhwIjoxNzQ5MjM2ODk5LCJpYXQiOjE3NDkyMzMyOTksImp0aSI6IjhjMWZjNTM5LWNkOWMtNGM0NS05ZGM2LTk4ZjU4OGQ3MDM2NSIsImVtYWlsIjoiamFsdnJ1bmQyMDE3QGdtYWlsLmNvbSJ9.3pjpssHcbAPVovrBZLbbvECgKz-EgAk-Qa8aH575uNy8g6U8DRAe2rVbHvSLPnKpVddfpgOyLiHZf6-aPMoPvv3WYXYnOKIz1tNI2t76m59wuw7fMDUtVq-J7eNBlPuX76pjGn7YTUeSTPS5r-wAQp3xmkK_fQgCX7OK0VA5oqYZuXmeh1ECX98VAYmhmfYoc-ju77dxw5h-Qjb1e1WN5LpeHoSZ7trsyAcHDry_128IrDP4pPvG_gGRZNyaVBhTnQbADDK0biyNYFYsFZMxo8a90CHDocI6jdq48duWD94y2uAcQ1j0q8irzGgkdtJgD6QXNZjL4MoJ86BWxWfNQw' // From /api/auth/login or /join request
+      },
+      transports: ['websocket', 'polling'] // Match server transports
+    });
+
+    socket.on('connect', () => {
+      document.getElementById('output').innerText += 'Connected to Socket.IO server\n';
+      socket.emit('join-room', {
+        roomId: '5bdd9bfd-1dc3-4904-a227-0de3e9248ff5',
+        avatar: {
+          id: 'avatar1',
+          name: 'Test User',
+          image: 'http://example.com/avatar.png'
+        }
+      });
+    });
+
+    socket.on('room-joined', (data) => {
+      document.getElementById('output').innerText += `Joined room: ${JSON.stringify(data, null, 2)}\n`;
+    });
+
+    socket.on('participant-joined', (data) => {
+      document.getElementById('output').innerText += `Participant joined: ${JSON.stringify(data, null, 2)}\n`;
+    });
+
+    socket.on('error', (data) => {
+      document.getElementById('output').innerText += `Error: ${data.message}\n`;
+    });
+
+    socket.on('connect_error', (error) => {
+      document.getElementById('output').innerText += `Connection error: ${error.message}\n`;
+    });
+  </script>
+</body>
+</html>
