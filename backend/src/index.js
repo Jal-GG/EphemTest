@@ -8,6 +8,7 @@ const authenticateUser = require('./middlewares/authMiddleware');
 const setupRoomSocket = require('./sockets/roomSocket');
 const http = require('http');
 const agoraRoutes = require("./routes/agoraRoutes")
+const paymentRoutes = require('./routes/paymentRoutes')
 
 const app = express();
 const server = http.createServer(app);
@@ -39,6 +40,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/agora', agoraRoutes)
+app.use('/api/payments', paymentRoutes); 
 
 app.get('/', (_req, res) => {
   res.send('Hello from backend!');
